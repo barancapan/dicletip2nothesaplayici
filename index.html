@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dicle Üniversitesi Tıp Fakültesi 2. Sınıf Not ve Geçme Hesaplayıcı</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e6e9f0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+
+    h1 {
+      font-size: 22px;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    small {
+      font-style: italic;
+      font-size: 11px;
+      color: #666;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #2ecc71;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #27ae60;
+    }
+
+    #sonuc {
+      margin-top: 20px;
+      font-size: 17px;
+      font-weight: bold;
+      color: #2c3e50;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dicle Üniversitesi Tıp Fakültesi<br>2. Sınıf Not ve Geçme Hesaplayıcı</h1>
+    <form id="notFormu">
+      <label>Komite 1 Notu <small>(8 kredi)</small></label>
+      <input type="number" id="k1" />
+      <label>Komite 2 Notu <small>(13 kredi)</small></label>
+      <input type="number" id="k2" />
+      <label>Komite 3 Notu <small>(8 kredi)</small></label>
+      <input type="number" id="k3" />
+      <label>Komite 4 Notu <small>(10 kredi)</small></label>
+      <input type="number" id="k4" />
+      <label>Komite 5 Notu <small>(11 kredi)</small></label>
+      <input type="number" id="k5" />
+      <label>Komite 6 Notu <small>(6 kredi)</small></label>
+      <input type="number" id="k6" />
+      <label>İHU Notu <small>(4 kredi)</small></label>
+      <input type="number" id="ihu" />
+      <label>1. Final Notu <small>(29 kredi)</small></label>
+      <input type="number" id="final1" />
+      <label>2. Final Notu <small>(27 kredi)</small></label>
+      <input type="number" id="final2" />
+      <button type="submit">Hesapla</button>
+    </form>
+    <div id="sonuc"></div>
+  </div>
+
+  <script>
+    const krediler = [8, 13, 8, 10, 11, 6];
+    const final1_kredi = 29;
+    const final2_kredi = 27;
+    const ihu_kredi = 4;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("notFormu").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const k = [];
+        for (let i = 1; i <= 6; i++) {
+          const val = parseFloat(document.getElementById("k" + i).value);
+          k.push(isNaN(val) ? null : val);
+        }
+
+        const ihu = parseFloat(document.getElementById("ihu").value);
+        const final1 = parseFloat(document.getElementById("final1").value);
+        const final2 = parseFloat(document.getElementById("final2").value);
+
+        const notYok = (x) => isNaN(x) || x === null;
+        let komite_puani = 0;
+
+        for (let i = 0; i < 6; i++) {
+          if (!notYok(k[i])) {
+            komite_puani += k[i] * krediler[i];
+          }
+        }
+
+        const ihu_katki = notYok(ihu) ? 0 : ihu * ihu_kredi;
+        const final1_katki = notYok(final1) ? 0 : final1 * final1_kredi;
+        const final2_katki = notYok(final2) ? 0 : final2 * final2_kredi;
+
+        const mevcut_sabit = (komite_puani + ihu_katki) / 60 + final1_katki / 56;
+
+        let bilinmeyenler = [];
+        if (notYok(k[5])) bilinmeyenler.push("k6");
+        if (notYok(final1)) bilinmeyenler.push("final1");
+        if (notYok(final2)) bilinmeyenler.push("final2");
+        if (notYok(ihu)) bilinmeyenler.push("ihu");
+
+        const katsayilar = {
+          k6: krediler[5] / 60,
+          final1: final1_kredi / 56,
+          final2: final2_kredi / 56,
+          ihu: ihu_kredi / 60,
+        };
+
+        const sonucDiv = document.getElementById("sonuc");
+
+        if (bilinmeyenler.length === 0) {
+          const toplam = (komite_puani + ihu_katki) / 60 + (final1_katki + final2_katki) / 56;
+          const durum = toplam >= 119 ? "Geçtin 🎉" : "Kaldın ❌";
+          sonucDiv.innerText = `Toplam dönem katkı puanın: ${toplam.toFixed(2)} / 119\nDurum: ${durum}`;
+          return;
+        }
+
+        const gereken = 119 - mevcut_sabit;
+        if (gereken <= 0) {
+          sonucDiv.innerText = `Tebrikler, eksik notlarınla bile zaten geçiyorsun! 🎉`;
+          return;
+        }
+
+        const toplam_katsayi = bilinmeyenler.reduce((sum, key) => sum + katsayilar[key], 0);
+        const x = gereken / toplam_katsayi;
+        const notlar = bilinmeyenler
+          .map((b) => b.replace("k", "Komite ").replace("final", "Final ").toUpperCase())
+          .join(", ");
+        sonucDiv.innerText = `Eksik notların: ${notlar}\nGeçmek için hepsinden en az ${x.toFixed(2)} almalısın.`;
+      });
+    });
+  </script>
+</body>
+</html>
