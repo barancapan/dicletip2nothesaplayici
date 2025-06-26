@@ -5,106 +5,311 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dicle Üniversitesi Tıp Fakültesi 2. Sınıf Not ve Geçme Hesaplayıcı</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #e6e9f0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1.5" fill="rgba(255,255,255,0.08)"/><circle cx="50" cy="10" r="0.8" fill="rgba(255,255,255,0.12)"/><circle cx="10" cy="60" r="1.2" fill="rgba(255,255,255,0.06)"/><circle cx="90" cy="30" r="0.6" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+      z-index: 1;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-top: 30px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.2);
+      margin-top: 40px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.3);
     }
 
     h1 {
-      font-size: 22px;
+      font-size: 28px;
       text-align: center;
-      color: #2c3e50;
+      color: #2d3748;
+      margin-bottom: 40px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.3;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
     }
 
     label {
       display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #333;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 15px;
     }
 
     small {
-      font-style: italic;
-      font-size: 11px;
-      color: #666;
+      font-style: normal;
+      font-size: 12px;
+      color: #718096;
+      background: rgba(113, 128, 150, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      padding: 16px 20px;
+      border: 2px solid rgba(113, 128, 150, 0.2);
+      border-radius: 16px;
       font-size: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    input:hover {
+      border-color: rgba(102, 126, 234, 0.4);
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px;
+      margin-top: 32px;
+      padding: 18px 32px;
       width: 100%;
-      background: #2ecc71;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: 600;
       border: none;
-      border-radius: 8px;
+      border-radius: 16px;
       cursor: pointer;
-      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    button:hover::before {
+      left: 100%;
     }
 
     button:hover {
-      background: #27ae60;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
     }
 
     #sonuc {
-      margin-top: 20px;
-      font-size: 17px;
-      font-weight: bold;
-      color: #2c3e50;
+      margin-top: 32px;
+      padding: 24px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
       white-space: pre-line;
       text-align: center;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      border-radius: 20px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      backdrop-filter: blur(10px);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    #sonuc:not(:empty) {
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .shape {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s infinite linear;
+    }
+
+    .shape:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      top: 60%;
+      right: 15%;
+      animation-delay: -7s;
+    }
+
+    .shape:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      top: 80%;
+      left: 20%;
+      animation-delay: -14s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(0px) rotate(360deg);
+        opacity: 0.7;
+      }
     }
 
     @media (max-width: 600px) {
       body {
-        padding: 10px;
+        padding: 15px;
+      }
+      
+      .container {
+        padding: 24px;
+        margin-top: 20px;
+        border-radius: 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+      }
+      
+      input {
+        padding: 14px 16px;
+      }
+      
+      button {
+        padding: 16px 24px;
+        font-size: 16px;
+      }
+      
+      #sonuc {
+        font-size: 16px;
+        padding: 20px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="floating-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+  
   <div class="container">
     <h1>Dicle Üniversitesi Tıp Fakültesi<br>2. Sınıf Not ve Geçme Hesaplayıcı</h1>
     <form id="notFormu">
-      <label>Komite 1 Notu <small>(8 kredi)</small></label>
-      <input type="number" id="k1" />
-      <label>Komite 2 Notu <small>(13 kredi)</small></label>
-      <input type="number" id="k2" />
-      <label>Komite 3 Notu <small>(8 kredi)</small></label>
-      <input type="number" id="k3" />
-      <label>Komite 4 Notu <small>(10 kredi)</small></label>
-      <input type="number" id="k4" />
-      <label>Komite 5 Notu <small>(11 kredi)</small></label>
-      <input type="number" id="k5" />
-      <label>Komite 6 Notu <small>(6 kredi)</small></label>
-      <input type="number" id="k6" />
-      <label>İHU Notu <small>(4 kredi)</small></label>
-      <input type="number" id="ihu" />
-      <label>1. Final Notu <small>(29 kredi)</small></label>
-      <input type="number" id="final1" />
-      <label>2. Final Notu <small>(27 kredi)</small></label>
-      <input type="number" id="final2" />
+      <div class="form-group">
+        <label>Komite 1 Notu <small>8 kredi</small></label>
+        <input type="number" id="k1" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>Komite 2 Notu <small>13 kredi</small></label>
+        <input type="number" id="k2" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>Komite 3 Notu <small>8 kredi</small></label>
+        <input type="number" id="k3" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>Komite 4 Notu <small>10 kredi</small></label>
+        <input type="number" id="k4" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>Komite 5 Notu <small>11 kredi</small></label>
+        <input type="number" id="k5" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>Komite 6 Notu <small>6 kredi</small></label>
+        <input type="number" id="k6" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>İHU Notu <small>4 kredi</small></label>
+        <input type="number" id="ihu" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>1. Final Notu <small>29 kredi</small></label>
+        <input type="number" id="final1" step="0.01" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label>2. Final Notu <small>27 kredi</small></label>
+        <input type="number" id="final2" step="0.01" min="0" max="100" />
+      </div>
       <button type="submit">Hesapla</button>
     </form>
     <div id="sonuc"></div>
@@ -161,14 +366,16 @@
 
         if (bilinmeyenler.length === 0) {
           const toplam = (komite_puani + ihu_katki) / 60 + (final1_katki + final2_katki) / 56;
-          const durum = toplam >= 119 ? "Geçtin 🎉" : "Kaldın ❌";
-          sonucDiv.innerText = `Toplam dönem katkı puanın: ${toplam.toFixed(2)} / 119\nDurum: ${durum}`;
+          // Gerçek ortalamayı hesapla (0-100 arasında)
+          const gercek_ortalama = toplam / 2;
+          const durum = gercek_ortalama >= 59.5 ? "Geçtin 🎉" : "Kaldın ❌";
+          sonucDiv.innerText = `Dönem ortalamanız: ${gercek_ortalama.toFixed(2)} / 59.5\nDurum: ${durum}`;
           return;
         }
 
         const gereken = 119 - mevcut_sabit;
         if (gereken <= 0) {
-          sonucDiv.innerText = `Tebrikler, eksik notlarınla bile zaten geçiyorsun! 🎉`;
+          sonucDiv.innerText = `Tebrikler, eksik notlarınızla bile zaten geçiyorsunuz! 🎉`;
           return;
         }
 
@@ -177,7 +384,7 @@
         const notlar = bilinmeyenler
           .map((b) => b.replace("k", "Komite ").replace("final", "Final ").toUpperCase())
           .join(", ");
-        sonucDiv.innerText = `Eksik notların: ${notlar}\nGeçmek için hepsinden en az ${x.toFixed(2)} almalısın.`;
+        sonucDiv.innerText = `Eksik notlarınız: ${notlar}\nGeçmek için hepsinden en az ${x.toFixed(2)} almalısınız.`;
       });
     });
   </script>
